@@ -1,7 +1,7 @@
 const regions = {
     kanto: {
         offset: 0,
-        limit: 150
+        limit: 151
     },
 
     johto: {
@@ -25,6 +25,16 @@ const regions = {
     },
     kalos: {
         offset: 649,
-        limit: 159,
+        limit: 72,
+    },
+
+    alola: {
+        offset: 721,
+        limit: 88,
+    },
+
+    galar: {
+        offset: 809,
+        limit: 89,
     },
 }

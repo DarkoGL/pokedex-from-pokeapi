@@ -18,14 +18,17 @@ body {
 
 .header {
   height: 200px;
-  width: 100%;
+  min-width: 100%;
   display: flex;
   justify-content: center;
-  padding: 50px 0;
+  padding: 50px 00px;
+  margin-bottom: 50px;
+  background-color:  rgb(97, 149, 176);
+  border-radius: 50px;
 
   &__logo {
     margin: 0 auto;
-    padding-left: 170px;
+    padding-left: 100px;
   }
 }
 
@@ -34,8 +37,8 @@ body {
   grid-template-columns: repeat(3, 1fr);
   gap: 24px;
   padding: 24px;
-  padding-top: 100px;
-  height: 40px;
+  padding-top: 50px;
+  height: 100px;
 
   .regionBtn{
     padding: 12px 32px;
@@ -58,10 +61,10 @@ body {
 }
 
 .card {
-  height: 400px;
+  height: 450px;
   max-width: 250px;
   list-style: none;
-  padding: 60px;
+  padding: 70px;
   background-color: #f4f4f4;
   color: black;
   text-align: center;
@@ -75,10 +78,14 @@ body {
   margin-bottom: 0;
 }
 .card-subtitle {
-  font-weight: normal;
+  font-weight: 700;
   color: black;
   margin-top: 5px;
   text-transform: uppercase;
+  background-color: white;
+  border-radius: 20px;
+  border: none;
+  letter-spacing: 1px;
 }
 .card-image {
   height: 175px;
@@ -101,6 +108,26 @@ body {
 .card:hover {
   animation: bounce 0.5s linear;
 }
+
+.flip-button{
+  margin-top: 10px;
+  padding: 10px;
+  width: 80px;
+  font-size: 18px;
+  text-transform: uppercase;
+  border-radius: 50px;
+  border: none;
+  background-color: rgba(66, 17, 17, 1);
+  color: white;
+  cursor: pointer;
+
+  &:hover{
+    background-color: white;
+    color: rgba(66, 17, 17, 1);
+    border: 3px solid rgba(66, 17, 17, 1);
+  }
+}
+
 @keyframes bounce {
   20% {
     transform: translateY(-6px);
@@ -176,15 +203,30 @@ body {
   background-color: #ef6138;
 }
 
+.dark{
+  background-color: rgb(36, 34, 34);
+  color: white;
+}
+
+.steel{
+  background-color: slategray;
+}
+
+.flying{
+ background-color: lightblue;
+}
+
 .divFinder {
-  width: 50px;
+  width: 250px;
   padding-top: 75px;
+  padding-left: 20px;
 
   input {
     width: 180px;
     font-weight: 700;
     height: 20px;
     border-radius: 15px;
+    border: none;
   }
 
   p {

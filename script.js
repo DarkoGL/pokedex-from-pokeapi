@@ -7,17 +7,21 @@
  * - Añadir al DOM los pokemons, dentro del div pokedex.
  */
 
+//Constantes y variables globales
 const pokedex$$ = document.querySelector("#pokedex");
 const VIRTUAL_COLLECTION = [];
-let ALL_POKEMONS_INFO = []; // Cuando una variable se declara en scope global para ser usada por otros, se hace en mayúsculas.
+let ALL_POKEMONS_INFO = []; 
 let requestInCourse = false;
+let audioDiv = document.createElement("div");
 
+//Función para hacer fetch a todos los pokemon parametrizando su offset y su limit.
 const getAllPokemon = (offset = 0, limit = 150) =>
   fetch(`https://pokeapi.co/api/v2/pokemon?offset=${offset}&limit=${limit}`)
     .then((response) => response.json())
     .then((response) => response.results)
     .catch((err) => console.log("Error obteniendo todos los pokemons", err));
 
+//Función para recuperar los datos de cada pokemon individualmente
 const getOnePokemon = async (url) =>
   fetch(url)
     .then((response) => response.json())
@@ -26,10 +30,11 @@ const getOnePokemon = async (url) =>
     })
     .catch((err) => console.log("Error obteniendo pokemon individual", err));
 
-let audioDiv = document.createElement("div");
+//Función que "pintará" los pokemon.
 const renderPokemons = (pokemons) => {
   pokedex$$.innerHTML = "";
   console.log(pokemons);
+
   pokemons.forEach((poke) => {
     const li$$ = document.createElement("li");
     li$$.classList.add("card");
@@ -40,28 +45,42 @@ const renderPokemons = (pokemons) => {
     img$$.alt = poke.name;
 
     const p$$ = document.createElement("p");
+    p$$.classList.add("card-title");
+    p$$.textContent = poke.name;
+
     const h4$$ = document.createElement("h4");
     h4$$.classList.add("idPokemon");
-    +p$$.classList.add("card-title");
-    p$$.textContent = poke.name;
     h4$$.textContent = "ID: " + poke.id;
+
+    const button$$ = document.createElement("button");
+    button$$.classList.add("flip-button");
+    button$$.textContent = "flip!";
 
     const div$$ = document.createElement("div");
     div$$.classList.add("card-subtitle");
 
-    if (poke.types.length === 2) div$$.textContent = poke.types[0].type.name + " / " + poke.types[1].type.name;
-    else div$$.textContent = poke.types[0].type.name;
+    if (poke.types.length === 2){
+      div$$.textContent = poke.types[0].type.name + " / " + poke.types[1].type.name;
+    } else div$$.textContent = poke.types[0].type.name;
+     
     li$$.appendChild(h4$$);
     li$$.appendChild(img$$);
     li$$.appendChild(p$$);
     li$$.appendChild(div$$);
+    li$$.appendChild(button$$);
+
+    //Añadir la parte de atrás a las cartas con imagen shiny, ataques y descripción
+    //Implementar un botón que gire las cartas
+    //TODO
+    button$$.addEventListener("click", () =>{
+      console.log("Funciona");
+    });
 
     //Añadir fondo a los pokemon según su tipo
     li$$.classList.add(poke.types[0].type.name);
 
     //Añade los gritos de los pokemon
-    const cries =
-      "https://play.pokemonshowdown.com/audio/cries/src/" + poke.name + ".wav";
+    const cries = "https://play.pokemonshowdown.com/audio/cries/src/" + poke.name + ".wav";
 
     img$$.addEventListener("click", () => {
       audioDiv.innerHTML = `<audio autoplay="autoplay">
@@ -70,38 +89,29 @@ const renderPokemons = (pokemons) => {
       document.body.appendChild(audioDiv);
     });
 
-    //función para girar las tarjetas
-
-    const cardBack = () => {
-      setTimeout(() => {
-        //li$$.classList.remove("card");
-        li$$.classList.add("card-back");
-        console.log("Evento funcionando");
-      }, 2000);
-    };
-
-    li$$.addEventListener("click", cardBack);
-
     pokedex$$.appendChild(li$$);
   });
 };
 
+//Buscador "live" por nombre //TODO añadir busqueda por ID
 const pokeFinder = () => {
+
   const divFinder$$ = document.createElement("div");
   divFinder$$.classList.add("divFinder");
+
   const finderDesc$$ = document.createElement("p");
   const finder$$ = document.createElement("input");
+
   finder$$.setAttribute("type", "text");
   finderDesc$$.textContent = "PokeBuscador";
 
   finder$$.addEventListener("input", (e) => {
     const value = e.target.value;
 
-    //buscar si hay resultados que coincidan por su nombre en el arrau ALL pokemons
-    //Si hay resuiltados, borro el contenido del div pokedex y los sustituyo por los del filtro
     const filtered = ALL_POKEMONS_INFO.filter((pokemon) =>
       pokemon.name.includes(value)
     );
+
     renderPokemons(filtered);
   });
 
@@ -112,9 +122,7 @@ const pokeFinder = () => {
   header$$.insertBefore(divFinder$$, logo$$);
 };
 
-const johto = document.querySelector(".johto");
-const hoenn = document.querySelector(".hoenn");
-
+//Función para recuperar pokemon según su región
 const fetchPokemonRegion =  async (region) => {
   if(requestInCourse) return;
 
@@ -124,6 +132,8 @@ const fetchPokemonRegion =  async (region) => {
   requestInCourse = true;
   const allPokemon = await getAllPokemon(offset, limit);
 
+  //Virtualizamos nuestra colección de pokemon para que solo haga Fetch la primera vez
+  //Posteriormente, esos resultados se guardan en el array VIRTUAL_COLLECTION.
   for (const pokemon of allPokemon) {
     const id = pokemon.url.split('/').slice(-2)[0];
     const exist = VIRTUAL_COLLECTION.find(pokemon => pokemon.id === id);
@@ -136,6 +146,8 @@ const fetchPokemonRegion =  async (region) => {
   renderPokemons(ALL_POKEMONS_INFO);
 }
 
+//Creamos botones de forma dinámica por cada región añadida en el archivo "helpers"
+//Asignamos la funcionalidad anterior a los botones
 const addRegionButtons = (regions) => {
   const regionContainer$$ = document.createElement("div");
   regionContainer$$.classList.add("regions-container")
