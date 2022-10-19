@@ -1,12 +1,3 @@
-/**
- * Requisitos
- * - Obtener lista pokedex y guardar en variable ✅
- * - Obtener el listado de todos los pokemons ✅
- * - Obtener todos los pokemons individuales uno por uno ✅
- * - Para obtener todos los pokemons, me dice el ejercicio que debo iterar uno por uno. ✅
- * - Añadir al DOM los pokemons, dentro del div pokedex.
- */
-
 //Constantes y variables globales
 const pokedex$$ = document.querySelector("#pokedex");
 const VIRTUAL_COLLECTION = [];
@@ -48,6 +39,7 @@ const renderPokemons = (pokemons) => {
     imgFront$$.classList.add("card-image");
     imgFront$$.src = poke.sprites.front_default;
     imgFront$$.alt = poke.name;
+    imgFront$$.title = "Click here to hear me!";
 
     const imgBack$$ = document.createElement("img");
     imgBack$$.classList.add("card-image");
@@ -122,13 +114,7 @@ const renderPokemons = (pokemons) => {
       li$$.classList.toggle("isFlipped");
     })
 
-    //Añadir la parte de atrás a las cartas con imagen shiny, ataques y descripción
-    //Implementar un botón que gire las cartas
-
-    //Añadir fondo a los pokemon según su tipo
-    
-
-    //Añade los gritos de los pokemon
+    //Función que añade los gritos de los pokemon
     const cries = "https://play.pokemonshowdown.com/audio/cries/src/" + poke.name.split("-").join("") + ".wav";
 
     imgFront$$.addEventListener("click", () => {
@@ -158,12 +144,10 @@ const pokeFinder = () => {
   finderDesc$$.textContent = "PokeBuscador";
 
   finder$$.addEventListener("input", (e) => {
-    const value = e.target.value;
-
+    const value = e.target.value.toLowerCase();
     const filtered = ALL_POKEMONS_INFO.filter((pokemon) =>
       pokemon.name.includes(value)
     );
-
     renderPokemons(filtered);
   });
 
@@ -215,6 +199,7 @@ const addRegionButtons = (regions) => {
   });
 }
 
+//Función "maestra" que llama al resto.
 const run = async () => {
   fetchPokemonRegion('kanto');
   pokeFinder();

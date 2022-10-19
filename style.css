@@ -30,7 +30,7 @@ body {
   grid-template-columns: repeat(4, 1fr);
   gap: 24px;
   padding: 24px;
-  padding-top: 85px;
+  padding-top: 77px;
   padding-right: 50px;
   height: 100px;
 }
@@ -286,13 +286,13 @@ body {
   padding-left: 50px;
 }
 .divFinder input {
-  width: 180px;
+  width: 265px;
   font-weight: 700;
-  height: 20px;
+  height: 30px;
   border-radius: 15px;
   border: none;
 }
 .divFinder p {
-  font-size: 32px;
+  font-size: 40px;
   margin: 20px auto;
 }/*# sourceMappingURL=style.css.map */
