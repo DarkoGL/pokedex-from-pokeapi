@@ -33,28 +33,50 @@ const getOnePokemon = async (url) =>
 //Función que "pintará" los pokemon.
 const renderPokemons = (pokemons) => {
   pokedex$$.innerHTML = "";
-  console.log(pokemons);
 
   pokemons.forEach((poke) => {
     const li$$ = document.createElement("li");
     li$$.classList.add("card");
 
-    const img$$ = document.createElement("img");
-    img$$.classList.add("card-image");
-    img$$.src = poke.sprites.front_default;
-    img$$.alt = poke.name;
+    const divFront$$ = document.createElement("div");
+    divFront$$.classList.add("front-card");
+    
+    const divBack$$ = document.createElement("div");
+    divBack$$.classList.add("back-card");
+    
+    const imgFront$$ = document.createElement("img");
+    imgFront$$.classList.add("card-image");
+    imgFront$$.src = poke.sprites.front_default;
+    imgFront$$.alt = poke.name;
 
-    const p$$ = document.createElement("p");
-    p$$.classList.add("card-title");
-    p$$.textContent = poke.name;
+    const imgBack$$ = document.createElement("img");
+    imgBack$$.classList.add("card-image");
+    imgBack$$.src = poke.sprites.front_shiny;
+    imgBack$$.alt = poke.name;
 
-    const h4$$ = document.createElement("h4");
-    h4$$.classList.add("idPokemon");
-    h4$$.textContent = "ID: " + poke.id;
+    const pFront$$ = document.createElement("p");
+    pFront$$.classList.add("card-title");
+    pFront$$.textContent = poke.name;
 
-    const button$$ = document.createElement("button");
-    button$$.classList.add("flip-button");
-    button$$.textContent = "flip!";
+    const h4Front$$ = document.createElement("h4");
+    h4Front$$.classList.add("idPokemon");
+    h4Front$$.textContent = "ID: " + poke.id;
+
+    const h4Back$$ = document.createElement("h4");
+    h4Back$$.classList.add("back-title");
+    h4Back$$.textContent = "Shiny Version";
+
+    const h5Moves$$ = document.createElement("h5");
+    h5Moves$$.classList.add("moves-title");
+    h5Moves$$.textContent = "Attacks";
+
+    const buttonFront$$ = document.createElement("button");
+    buttonFront$$.classList.add("flip-button");
+    buttonFront$$.textContent = "flip!";
+
+    const buttonBack$$ = document.createElement("button");
+    buttonBack$$.classList.add("flip-button");
+    buttonBack$$.textContent = "flip!";
 
     const div$$ = document.createElement("div");
     div$$.classList.add("card-subtitle");
@@ -62,33 +84,63 @@ const renderPokemons = (pokemons) => {
     if (poke.types.length === 2){
       div$$.textContent = poke.types[0].type.name + " / " + poke.types[1].type.name;
     } else div$$.textContent = poke.types[0].type.name;
-     
-    li$$.appendChild(h4$$);
-    li$$.appendChild(img$$);
-    li$$.appendChild(p$$);
-    li$$.appendChild(div$$);
-    li$$.appendChild(button$$);
+
+    
+    divFront$$.appendChild(h4Front$$);
+    divFront$$.appendChild(imgFront$$);
+    divFront$$.appendChild(pFront$$);
+    divFront$$.appendChild(div$$);
+    divFront$$.appendChild(buttonFront$$);
+    
+    divBack$$.appendChild(h4Back$$);
+    divBack$$.appendChild(imgBack$$);
+    divBack$$.appendChild(h5Moves$$);
+
+    let pokeMoves = poke.moves.length;
+
+    if(pokeMoves > 3){
+    for(let i = 0; i <= 3; i++){
+      const pBack$$ = document.createElement("p");
+      pBack$$.classList.add("moves");
+      pBack$$.textContent = poke.moves[i].move.name;
+      divBack$$.appendChild(pBack$$);
+    }
+  }else{
+    const pBack$$ = document.createElement("p");
+      pBack$$.classList.add("moves");
+      pBack$$.textContent = poke.moves[0].move.name;
+      divBack$$.appendChild(pBack$$);
+  }
+
+    divBack$$.appendChild(buttonBack$$);
+
+    buttonFront$$.addEventListener("click", () => {
+      li$$.classList.toggle("isFlipped");
+    })
+
+    buttonBack$$.addEventListener("click", () => {
+      li$$.classList.toggle("isFlipped");
+    })
 
     //Añadir la parte de atrás a las cartas con imagen shiny, ataques y descripción
     //Implementar un botón que gire las cartas
-    //TODO
-    button$$.addEventListener("click", () =>{
-      console.log("Funciona");
-    });
 
     //Añadir fondo a los pokemon según su tipo
-    li$$.classList.add(poke.types[0].type.name);
+    
 
     //Añade los gritos de los pokemon
-    const cries = "https://play.pokemonshowdown.com/audio/cries/src/" + poke.name + ".wav";
+    const cries = "https://play.pokemonshowdown.com/audio/cries/src/" + poke.name.split("-").join("") + ".wav";
 
-    img$$.addEventListener("click", () => {
+    imgFront$$.addEventListener("click", () => {
       audioDiv.innerHTML = `<audio autoplay="autoplay">
         <source src=${cries} type="audio/x-wav">
       </audio>`;
       document.body.appendChild(audioDiv);
     });
-
+    li$$.appendChild(divFront$$);
+    li$$.appendChild(divBack$$);
+    divBack$$.classList.add(poke.types[0].type.name);
+    divFront$$.classList.add(poke.types[0].type.name);
     pokedex$$.appendChild(li$$);
   });
 };
